@@ -58,6 +58,17 @@
     <string name="streaming_task_failed">Could not stream file</string>
     <string name="rcd_service_notification_channel_description">Background Service</string>
     <string name="worker_upload_complete">Upload complete</string>
+
+    <!-- Rclone performance options -->
+    <string name="pref_key_rclone_transfers">pref_key_rclone_transfers</string>
+    <string name="pref_rclone_transfers_title">Concurrent Transfers</string>
+    <string name="pref_rclone_transfers_summary">Number of files to transfer in parallel (rclone --transfers, default: 4)</string>
+    <string name="pref_key_rclone_checkers">pref_key_rclone_checkers</string>
+    <string name="pref_rclone_checkers_title">Concurrent Checkers</string>
+    <string name="pref_rclone_checkers_summary">Number of checkers to use in parallel (rclone --checkers, default: 8)</string>
+    <string name="pref_key_rclone_bwlimit">pref_key_rclone_bwlimit</string>
+    <string name="pref_rclone_bwlimit_title">Bandwidth Limit</string>
+    <string name="pref_rclone_bwlimit_summary">Bandwidth limit for transfers (rclone --bwlimit, e.g. 10M or leave blank for unlimited)</string>
     <string name="remotes_toolbar_title">Remotes</string>
     <string name="fab_upload_files">Upload Files</string>
     <string name="fab_new_folder">New Folder</string>

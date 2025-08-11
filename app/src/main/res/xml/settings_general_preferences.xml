@@ -36,6 +36,26 @@
             android:key="@string/pref_key_wifi_only_transfers"
             android:title="@string/transfer_only_on_wifi"
             app:summary="@string/transfer_only_on_wifi_summary" />
+        <EditTextPreference
+            android:defaultValue="4"
+            android:key="@string/pref_key_rclone_transfers"
+            android:title="@string/pref_rclone_transfers_title"
+            android:inputType="number"
+            app:useSimpleSummaryProvider="true"
+            app:summary="@string/pref_rclone_transfers_summary" />
+        <EditTextPreference
+            android:defaultValue="8"
+            android:key="@string/pref_key_rclone_checkers"
+            android:title="@string/pref_rclone_checkers_title"
+            android:inputType="number"
+            app:useSimpleSummaryProvider="true"
+            app:summary="@string/pref_rclone_checkers_summary" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="@string/pref_key_rclone_bwlimit"
+            android:title="@string/pref_rclone_bwlimit_title"
+            app:useSimpleSummaryProvider="true"
+            app:summary="@string/pref_rclone_bwlimit_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/preference_category_header_proxy">

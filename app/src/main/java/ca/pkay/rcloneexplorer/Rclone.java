@@ -678,7 +678,20 @@ public class Rclone {
         String localRemotePath = (remoteItem.isRemoteType(RemoteItem.LOCAL)) ? getLocalRemotePathPrefix(remoteItem, context)  + "/" : "";
         String remoteSection = (remotePath.compareTo("//" + remoteName) == 0) ? remoteName + ":" + localRemotePath : remoteName + ":" + localRemotePath + remotePath;
 
-        ArrayList<String> defaultParameter = new ArrayList<>(Arrays.asList("--transfers", "1", "--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log"));
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String transfers = prefs.getString(context.getString(R.string.pref_key_rclone_transfers), "4");
+        String checkers = prefs.getString(context.getString(R.string.pref_key_rclone_checkers), "8");
+        String bwlimit = prefs.getString(context.getString(R.string.pref_key_rclone_bwlimit), "");
+
+        ArrayList<String> defaultParameter = new ArrayList<>(Arrays.asList(
+            "--transfers", transfers != null && !transfers.isEmpty() ? transfers : "4",
+            "--checkers", checkers != null && !checkers.isEmpty() ? checkers : "8",
+            "--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log"
+        ));
+        if (bwlimit != null && !bwlimit.isEmpty()) {
+            defaultParameter.add("--bwlimit");
+            defaultParameter.add(bwlimit);
+        }
         ArrayList<String> directionParameter = new ArrayList<>();
 
         if(useMD5Sum){
@@ -733,7 +746,21 @@ public class Rclone {
 
         localFilePath = encodePath(localFilePath);
 
-        command = createCommandWithOptions("copy", remoteFilePath, localFilePath, "--transfers", "1", "--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String transfers = prefs.getString(context.getString(R.string.pref_key_rclone_transfers), "4");
+        String checkers = prefs.getString(context.getString(R.string.pref_key_rclone_checkers), "8");
+        String bwlimit = prefs.getString(context.getString(R.string.pref_key_rclone_bwlimit), "");
+        ArrayList<String> params = new ArrayList<>(Arrays.asList(
+            "copy", remoteFilePath, localFilePath,
+            "--transfers", transfers != null && !transfers.isEmpty() ? transfers : "4",
+            "--checkers", checkers != null && !checkers.isEmpty() ? checkers : "8",
+            "--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log"
+        ));
+        if (bwlimit != null && !bwlimit.isEmpty()) {
+            params.add("--bwlimit");
+            params.add(bwlimit);
+        }
+        command = createCommandWithOptions(params);
 
         String[] env = getRcloneEnv();
         try {
@@ -765,7 +792,21 @@ public class Rclone {
             path = (uploadPath.compareTo("//" + remoteName) == 0) ? remoteName + ":" + localRemotePath : remoteName + ":" + localRemotePath + uploadPath;
         }
 
-        command = createCommandWithOptions("copy", uploadFile, path, "--transfers", "1", "--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String transfers = prefs.getString(context.getString(R.string.pref_key_rclone_transfers), "4");
+        String checkers = prefs.getString(context.getString(R.string.pref_key_rclone_checkers), "8");
+        String bwlimit = prefs.getString(context.getString(R.string.pref_key_rclone_bwlimit), "");
+        ArrayList<String> params = new ArrayList<>(Arrays.asList(
+            "copy", uploadFile, path,
+            "--transfers", transfers != null && !transfers.isEmpty() ? transfers : "4",
+            "--checkers", checkers != null && !checkers.isEmpty() ? checkers : "8",
+            "--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log"
+        ));
+        if (bwlimit != null && !bwlimit.isEmpty()) {
+            params.add("--bwlimit");
+            params.add(bwlimit);
+        }
+        command = createCommandWithOptions(params);
 
         String[] env = getRcloneEnv();
         try {
