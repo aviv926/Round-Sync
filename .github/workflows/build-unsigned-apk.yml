@@ -2,8 +2,6 @@ name: Build Unsigned APK
 
 on:
   workflow_dispatch:
-  release:
-    types: [published]
 
 jobs:
   build:
@@ -25,17 +23,11 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build unsigned APK
-        run: ./gradlew assembleDebug --no-daemon
-
-      - name: Find unsigned APK
-        id: find_apk
-        run: |
-          APK_PATH=$(find $GITHUB_WORKSPACE/app/build/outputs/apk/debug -name "*.apk" | grep -v signed | head -n 1)
-          echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
+        run: ./gradlew :app:assembleDebug --no-daemon
 
       - name: Upload unsigned APK
         uses: actions/upload-artifact@v4
         with:
           name: unsigned-apk
-          path: ${{ steps.find_apk.outputs.apk_path }}
+          path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
