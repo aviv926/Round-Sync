@@ -1,7 +1,6 @@
 <resources>
     <string name="pref_key_rclone_progress" translatable="false">pref_key_rclone_progress</string>
     <string name="pref_rclone_progress_title">Show rclone progress output (-P)</string>
-    <!-- Rclone advanced options -->
     <string name="pref_category_rclone_advanced">Rclone Advanced Options</string>
     <string name="pref_key_rclone_transfers" translatable="false">pref_key_rclone_transfers</string>
     <string name="pref_rclone_transfers_title">Number of Transfers (--transfers)</string>
@@ -12,7 +11,6 @@
     <string name="app_name">Round Sync</string>
     <string name="app_description">Rclone for Android</string>
     <string name="app_short_name">Round Sync</string>
-
     <string name="title_activity_about">About</string>
     <string name="title_activity_changelog">Changelog</string>
     <string name="title_activity_contributors">License</string>
@@ -612,6 +610,5 @@
     <string name="pref_proxy_user">Username</string>
     <string name="pref_proxy_password">Password</string>
     <string name="intro_update_checks_title">Update Notifications</string>
-    <string name="intro_update_checks_description">If you want to recieve updates, you can enable the switch below! We will notify if an update is available, and you can then choose to apply it.</string>
     <string name="intro_update_checks_description">If you want to recieve updates, you can enable the switch below! We will notify if an update is available, and you can then choose to apply it.</string>
 </resources>
