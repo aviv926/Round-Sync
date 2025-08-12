@@ -1,6 +1,6 @@
+<resources>
     <string name="pref_key_rclone_progress" translatable="false">pref_key_rclone_progress</string>
     <string name="pref_rclone_progress_title">Show rclone progress output (-P)</string>
-<resources>
     <!-- Rclone advanced options -->
     <string name="pref_category_rclone_advanced">Rclone Advanced Options</string>
     <string name="pref_key_rclone_transfers" translatable="false">pref_key_rclone_transfers</string>
