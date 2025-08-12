@@ -88,4 +88,34 @@
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
+        <PreferenceCategory android:title="@string/preference_category_header_rclone">
+            <de.felixnuesse.extract.settings.preferences.EditIntPreference
+                android:inputType="number"
+                android:key="@string/pref_key_rclone_transfers"
+                android:title="@string/pref_rclone_transfers_title"
+                android:defaultValue="1"
+                app:useSimpleSummaryProvider="true" />
+
+            <de.felixnuesse.extract.settings.preferences.EditIntPreference
+                android:inputType="number"
+                android:key="@string/pref_key_rclone_checkers"
+                android:title="@string/pref_rclone_checkers_title"
+                android:defaultValue="8"
+                app:useSimpleSummaryProvider="true" />
+
+            <de.felixnuesse.extract.settings.preferences.EditIntPreference
+                android:inputType="number"
+                android:key="@string/pref_key_rclone_bwlimit"
+                android:title="@string/pref_rclone_bwlimit_title"
+                android:defaultValue="0"
+                app:useSimpleSummaryProvider="true"
+                app:summary="@string/pref_rclone_bwlimit_summary" />
+
+            <SwitchPreferenceCompat
+                android:key="@string/pref_key_rclone_show_progress"
+                android:title="@string/pref_rclone_show_progress_title"
+                android:defaultValue="false"
+                app:summary="@string/pref_rclone_show_progress_summary" />
+        </PreferenceCategory>
+
 </PreferenceScreen>

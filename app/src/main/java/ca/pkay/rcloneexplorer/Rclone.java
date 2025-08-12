@@ -678,7 +678,7 @@ public class Rclone {
         String localRemotePath = (remoteItem.isRemoteType(RemoteItem.LOCAL)) ? getLocalRemotePathPrefix(remoteItem, context)  + "/" : "";
         String remoteSection = (remotePath.compareTo("//" + remoteName) == 0) ? remoteName + ":" + localRemotePath : remoteName + ":" + localRemotePath + remotePath;
 
-        ArrayList<String> defaultParameter = new ArrayList<>(Arrays.asList("--transfers", "1", "--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log"));
+        ArrayList<String> defaultParameter = getUserRcloneOptions();
         ArrayList<String> directionParameter = new ArrayList<>();
 
         if(useMD5Sum){
@@ -733,7 +733,12 @@ public class Rclone {
 
         localFilePath = encodePath(localFilePath);
 
-        command = createCommandWithOptions("copy", remoteFilePath, localFilePath, "--transfers", "1", "--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log");
+        ArrayList<String> options = new ArrayList<>();
+        options.add("copy");
+        options.add(remoteFilePath);
+        options.add(localFilePath);
+        options.addAll(getUserRcloneOptions());
+        command = createCommandWithOptions(options);
 
         String[] env = getRcloneEnv();
         try {
@@ -765,7 +770,12 @@ public class Rclone {
             path = (uploadPath.compareTo("//" + remoteName) == 0) ? remoteName + ":" + localRemotePath : remoteName + ":" + localRemotePath + uploadPath;
         }
 
-        command = createCommandWithOptions("copy", uploadFile, path, "--transfers", "1", "--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log");
+        ArrayList<String> options = new ArrayList<>();
+        options.add("copy");
+        options.add(uploadFile);
+        options.add(path);
+        options.addAll(getUserRcloneOptions());
+        command = createCommandWithOptions(options);
 
         String[] env = getRcloneEnv();
         try {
@@ -775,6 +785,53 @@ public class Rclone {
             return null;
         }
 
+    }
+    /**
+     * Get user rclone options from SharedPreferences
+     */
+    private ArrayList<String> getUserRcloneOptions() {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        ArrayList<String> options = new ArrayList<>();
+
+        // --transfers
+        int transfers = 1;
+        try {
+            transfers = Integer.parseInt(pref.getString(context.getString(R.string.pref_key_rclone_transfers), "1"));
+        } catch (Exception ignored) {}
+        options.add("--transfers");
+        options.add(String.valueOf(transfers));
+
+        // --checkers
+        int checkers = 8;
+        try {
+            checkers = Integer.parseInt(pref.getString(context.getString(R.string.pref_key_rclone_checkers), "8"));
+        } catch (Exception ignored) {}
+        options.add("--checkers");
+        options.add(String.valueOf(checkers));
+
+        // --bwlimit (in MB/s)
+        int bwlimit = 0;
+        try {
+            bwlimit = Integer.parseInt(pref.getString(context.getString(R.string.pref_key_rclone_bwlimit), "0"));
+        } catch (Exception ignored) {}
+        if (bwlimit > 0) {
+            options.add("--bwlimit");
+            options.add(bwlimit + "M");
+        }
+
+        // --stats, --stats-log-level, --use-json-log
+        options.add("--stats=1s");
+        options.add("--stats-log-level");
+        options.add("NOTICE");
+        options.add("--use-json-log");
+
+        // -P (progress)
+        boolean showProgress = pref.getBoolean(context.getString(R.string.pref_key_rclone_show_progress), false);
+        if (showProgress) {
+            options.add("-P");
+        }
+
+        return options;
     }
 
     // Can't pass \u0000 as cmd arg - encode like rclone with U+2400

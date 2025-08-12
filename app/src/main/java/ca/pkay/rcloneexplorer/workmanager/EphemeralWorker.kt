@@ -1,3 +1,6 @@
+import android.os.Handler
+import android.os.Looper
+import ca.pkay.rcloneexplorer.Activities.RcloneProgressActivity
 package ca.pkay.rcloneexplorer.workmanager
 
 import android.app.Notification
@@ -207,35 +210,86 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
     private fun handleSync(title: String) {
         if (sRcloneProcess != null) {
             val localProcessReference = sRcloneProcess!!
+            val showProgress = mPreferences.getBoolean(mContext.getString(R.string.pref_key_rclone_show_progress), false)
+            var progressHandler: Handler? = null
+            if (showProgress) {
+                val intent = android.content.Intent(mContext, RcloneProgressActivity::class.java)
+                intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                mContext.startActivity(intent)
+                progressHandler = Handler(Looper.getMainLooper())
+            }
+            // --- Notification update improvements ---
+            val notificationUpdateInterval = 2000L // ms
+            var lastNotificationUpdate = System.currentTimeMillis()
+            var lastStatusContent = ""
+            var lastPercent = -1
+            val updateNotificationIfNeeded = {
+                val now = System.currentTimeMillis()
+                if (statusObject.notificationContent != lastStatusContent || statusObject.notificationPercent != lastPercent || now - lastNotificationUpdate > notificationUpdateInterval) {
+                    updateForegroundNotification(mNotificationManager?.updateNotification(
+                        title,
+                        statusObject.notificationContent,
+                        statusObject.notificationBigText,
+                        statusObject.notificationPercent,
+                        ongoingNotificationID
+                    ))
+                    lastStatusContent = statusObject.notificationContent
+                    lastPercent = statusObject.notificationPercent
+                    lastNotificationUpdate = now
+                }
+            }
             try {
-                val reader = BufferedReader(InputStreamReader(localProcessReference.errorStream))
-                val iterator = reader.lineSequence().iterator()
-                while(iterator.hasNext()) {
-                    val line = iterator.next()
+                val stdReader = BufferedReader(InputStreamReader(localProcessReference.inputStream))
+                val errReader = BufferedReader(InputStreamReader(localProcessReference.errorStream))
+                var stdLine: String?
+                var errLine: String?
+                // Use a thread to periodically update notification in case output stalls
+                val notificationThread = Thread {
+                    while (localProcessReference.isAlive) {
+                        try {
+                            updateNotificationIfNeeded()
+                            Thread.sleep(notificationUpdateInterval)
+                        } catch (_: Exception) {}
+                    }
+                }
+                notificationThread.start()
+                while (true) {
+                    stdLine = stdReader.readLine()
+                    if (stdLine == null) break
+                    if (showProgress) {
+                        progressHandler?.post {
+                            try {
+                                RcloneProgressActivity.appendOutputStatic(stdLine)
+                            } catch (_: Exception) {}
+                        }
+                    }
                     try {
-                        val logline = JSONObject(line)
-                        //todo: migrate this to StatusObject, so that we can handle everything properly.
+                        val logline = JSONObject(stdLine)
                         if (logline.getString("level") == "error") {
                             if (sIsLoggingEnabled) {
-                                log2File?.log(line)
+                                log2File?.log(stdLine)
                             }
                             statusObject.parseLoglineToStatusObject(logline)
                         } else if (logline.getString("level") == "warning") {
                             statusObject.parseLoglineToStatusObject(logline)
+                        } else if (logline.getString("level") == "info" || logline.getString("level") == "notice") {
+                            statusObject.parseLoglineToStatusObject(logline)
                         }
-
-                        updateForegroundNotification(mNotificationManager?.updateNotification(
-                            title,
-                            statusObject.notificationContent,
-                            statusObject.notificationBigText,
-                            statusObject.notificationPercent,
-                            ongoingNotificationID
-                        ))
-                    } catch (e: JSONException) {
-                        Log.e(tag(), "Error: the offending line: $line")
-                        //FLog.e(TAG, "onHandleIntent: error reading json", e)
+                        updateNotificationIfNeeded()
+                    } catch (_: JSONException) {}
+                }
+                while (true) {
+                    errLine = errReader.readLine()
+                    if (errLine == null) break
+                    if (showProgress) {
+                        progressHandler?.post {
+                            try {
+                                RcloneProgressActivity.appendOutputStatic(errLine)
+                            } catch (_: Exception) {}
+                        }
                     }
                 }
+                notificationThread.interrupt()
             } catch (e: InterruptedIOException) {
                 FLog.e(tag(), "onHandleIntent: I/O interrupted, stream closed", e)
             } catch (e: IOException) {
@@ -246,6 +300,14 @@ class EphemeralWorker (private var mContext: Context, workerParams: WorkerParame
             } catch (e: InterruptedException) {
                 FLog.e(tag(), "onHandleIntent: error waiting for process", e)
             }
+            // Final notification update to ensure completion state is shown
+            updateForegroundNotification(mNotificationManager?.updateNotification(
+                title,
+                statusObject.notificationContent,
+                statusObject.notificationBigText,
+                statusObject.notificationPercent,
+                ongoingNotificationID
+            ))
         } else {
             log("Sync: No Rclone Process!")
         }
