@@ -1,3 +1,9 @@
+    <!-- Rclone progress output option -->
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="@string/pref_key_rclone_progress"
+        android:title="@string/pref_rclone_progress_title"
+        app:useSimpleSummaryProvider="true" />
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -86,6 +92,33 @@
             android:inputType="textPassword"
             android:password="true"
             app:useSimpleSummaryProvider="true" />
+
+        <!-- Rclone advanced options -->
+        <PreferenceCategory android:title="@string/pref_category_rclone_advanced">
+            <de.felixnuesse.extract.settings.preferences.EditIntPreference
+                android:inputType="number"
+                android:key="@string/pref_key_rclone_transfers"
+                android:numeric="integer"
+                android:title="@string/pref_rclone_transfers_title"
+                app:defaultValue="1"
+                app:useSimpleSummaryProvider="true" />
+
+            <de.felixnuesse.extract.settings.preferences.EditIntPreference
+                android:inputType="number"
+                android:key="@string/pref_key_rclone_bwlimit"
+                android:numeric="integer"
+                android:title="@string/pref_rclone_bwlimit_title"
+                app:defaultValue="0"
+                app:useSimpleSummaryProvider="true" />
+
+            <de.felixnuesse.extract.settings.preferences.EditIntPreference
+                android:inputType="number"
+                android:key="@string/pref_key_rclone_checkers"
+                android:numeric="integer"
+                android:title="@string/pref_rclone_checkers_title"
+                app:defaultValue="8"
+                app:useSimpleSummaryProvider="true" />
+        </PreferenceCategory>
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -19,6 +19,7 @@ import ca.pkay.rcloneexplorer.Items.Task
 import ca.pkay.rcloneexplorer.Log2File
 import ca.pkay.rcloneexplorer.R
 import ca.pkay.rcloneexplorer.Rclone
+import ca.pkay.rcloneexplorer.Activities.RcloneConsoleActivity
 import ca.pkay.rcloneexplorer.notifications.GenericSyncNotification
 import ca.pkay.rcloneexplorer.notifications.ReportNotifications
 import ca.pkay.rcloneexplorer.notifications.SyncServiceNotifications
@@ -35,6 +36,8 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.io.InterruptedIOException
 import java.util.Random
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class SyncWorker (private var mContext: Context, workerParams: WorkerParameters): Worker(mContext, workerParams) {
 
@@ -172,11 +175,26 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
         SyncLog.info(mContext, mTitle, mContext.getString(R.string.operation_start_sync))
         if (sRcloneProcess != null) {
             val localProcessReference = sRcloneProcess!!
+            val showProgress = mPreferences.getBoolean(mContext.getString(R.string.pref_key_rclone_progress), false)
+            val notificationExecutor = Executors.newSingleThreadScheduledExecutor()
+            val notificationTask = Runnable {
+                updateForegroundNotification(mNotificationManager.updateSyncNotification(
+                    title,
+                    statusObject.notificationContent,
+                    statusObject.notificationBigText,
+                    statusObject.notificationPercent,
+                    ongoingNotificationID
+                ))
+            }
+            notificationExecutor.scheduleAtFixedRate(notificationTask, 0, 2, TimeUnit.SECONDS)
             try {
                 val reader = BufferedReader(InputStreamReader(localProcessReference.errorStream))
                 val iterator = reader.lineSequence().iterator()
                 while(iterator.hasNext()) {
                     val line = iterator.next()
+                    if (showProgress) {
+                        RcloneConsoleActivity.sendOutputLine(mContext, line)
+                    }
                     try {
                         val logline = JSONObject(line)
                         //todo: migrate this to StatusObject, so that we can handle everything properly.
@@ -188,14 +206,8 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
                         } else if (logline.getString("level") == "warning") {
                             statusObject.parseLoglineToStatusObject(logline)
                         }
-
-                        updateForegroundNotification(mNotificationManager.updateSyncNotification(
-                            title,
-                            statusObject.notificationContent,
-                            statusObject.notificationBigText,
-                            statusObject.notificationPercent,
-                            ongoingNotificationID
-                        ))
+                        // Immediate update on new stats
+                        notificationTask.run()
                     } catch (e: JSONException) {
                         FLog.e(TAG, "SyncService-Error: the offending line: $line")
                         //FLog.e(TAG, "onHandleIntent: error reading json", e)
@@ -211,6 +223,7 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
             } catch (e: InterruptedException) {
                 FLog.e(TAG, "onHandleIntent: error waiting for process", e)
             }
+            notificationExecutor.shutdownNow()
         } else {
             log("Sync: No Rclone Process!")
         }

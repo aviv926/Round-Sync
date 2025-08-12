@@ -5,6 +5,7 @@ import ca.pkay.rcloneexplorer.Items.FileItem
 import ca.pkay.rcloneexplorer.R
 import ca.pkay.rcloneexplorer.notifications.prototypes.WorkerNotification
 import ca.pkay.rcloneexplorer.notifications.support.StatusObject
+import androidx.preference.PreferenceManager
 
 class DownloadWorkerNotification(var context: Context) : WorkerNotification(context) {
 
@@ -31,18 +32,23 @@ class DownloadWorkerNotification(var context: Context) : WorkerNotification(cont
     override val SUMMARY_ID = 390
 
     override fun generateSuccessMessage(statusObject: StatusObject, fileItem: FileItem): String {
-
         val transfers = statusObject.getTotalTransfers()
         val message = if (transfers <= 1 && !fileItem.isDir) {
             statusObject.getTransfers().toString()
         } else {
             fileItem.name
         }
+        val prefs = PreferenceManager.getDefaultSharedPreferences(mContext)
+        val transfersPref = prefs.getInt(mContext.getString(R.string.pref_key_rclone_transfers), 1)
+        val bwlimitPref = prefs.getInt(mContext.getString(R.string.pref_key_rclone_bwlimit), 0)
+        val checkersPref = prefs.getInt(mContext.getString(R.string.pref_key_rclone_checkers), 8)
+        val bwlimitStr = if (bwlimitPref > 0) " | BWLimit: ${bwlimitPref}MB" else ""
+        val paramInfo = " | Transfers: $transfersPref | Checkers: $checkersPref$bwlimitStr"
         return mContext.resources.getQuantityString(
-                R.plurals.worker_download_success_message,
-                transfers,
-                message
-        )
+            R.plurals.worker_download_success_message,
+            transfers,
+            message
+        ) + paramInfo
     }
 
 }

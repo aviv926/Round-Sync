@@ -1,4 +1,14 @@
+    <string name="pref_key_rclone_progress" translatable="false">pref_key_rclone_progress</string>
+    <string name="pref_rclone_progress_title">Show rclone progress output (-P)</string>
 <resources>
+    <!-- Rclone advanced options -->
+    <string name="pref_category_rclone_advanced">Rclone Advanced Options</string>
+    <string name="pref_key_rclone_transfers" translatable="false">pref_key_rclone_transfers</string>
+    <string name="pref_rclone_transfers_title">Number of Transfers (--transfers)</string>
+    <string name="pref_key_rclone_bwlimit" translatable="false">pref_key_rclone_bwlimit</string>
+    <string name="pref_rclone_bwlimit_title">Bandwidth Limit in MB (--bwlimit, 0 = unlimited)</string>
+    <string name="pref_key_rclone_checkers" translatable="false">pref_key_rclone_checkers</string>
+    <string name="pref_rclone_checkers_title">Number of Checkers (--checkers)</string>
     <string name="app_name">Round Sync</string>
     <string name="app_description">Rclone for Android</string>
     <string name="app_short_name">Round Sync</string>

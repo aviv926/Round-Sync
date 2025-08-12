@@ -1,3 +1,17 @@
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        menu.add(Menu.NONE, 1001, Menu.NONE, "Rclone Console");
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == 1001) {
+            RcloneConsoleActivity.launch(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 package ca.pkay.rcloneexplorer.Activities;
 
 import static ca.pkay.rcloneexplorer.util.ActivityHelper.tryStartActivityForResult;

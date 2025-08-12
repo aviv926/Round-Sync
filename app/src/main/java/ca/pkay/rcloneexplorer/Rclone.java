@@ -678,7 +678,24 @@ public class Rclone {
         String localRemotePath = (remoteItem.isRemoteType(RemoteItem.LOCAL)) ? getLocalRemotePathPrefix(remoteItem, context)  + "/" : "";
         String remoteSection = (remotePath.compareTo("//" + remoteName) == 0) ? remoteName + ":" + localRemotePath : remoteName + ":" + localRemotePath + remotePath;
 
-        ArrayList<String> defaultParameter = new ArrayList<>(Arrays.asList("--transfers", "1", "--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log"));
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int transfers = sharedPreferences.getInt(context.getString(R.string.pref_key_rclone_transfers), 1);
+        int bwlimit = sharedPreferences.getInt(context.getString(R.string.pref_key_rclone_bwlimit), 0);
+        int checkers = sharedPreferences.getInt(context.getString(R.string.pref_key_rclone_checkers), 8);
+        ArrayList<String> defaultParameter = new ArrayList<>();
+        defaultParameter.add("--transfers");
+        defaultParameter.add(String.valueOf(transfers));
+        defaultParameter.add("--checkers");
+        defaultParameter.add(String.valueOf(checkers));
+        if (bwlimit > 0) {
+            defaultParameter.add("--bwlimit");
+            defaultParameter.add(bwlimit + "M");
+        }
+        boolean showProgress = sharedPreferences.getBoolean(context.getString(R.string.pref_key_rclone_progress), false);
+        if (showProgress) {
+            defaultParameter.add("-P");
+        }
+        defaultParameter.addAll(Arrays.asList("--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log"));
         ArrayList<String> directionParameter = new ArrayList<>();
 
         if(useMD5Sum){
@@ -733,7 +750,28 @@ public class Rclone {
 
         localFilePath = encodePath(localFilePath);
 
-        command = createCommandWithOptions("copy", remoteFilePath, localFilePath, "--transfers", "1", "--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int transfers = sharedPreferences.getInt(context.getString(R.string.pref_key_rclone_transfers), 1);
+        int bwlimit = sharedPreferences.getInt(context.getString(R.string.pref_key_rclone_bwlimit), 0);
+        int checkers = sharedPreferences.getInt(context.getString(R.string.pref_key_rclone_checkers), 8);
+        ArrayList<String> params = new ArrayList<>();
+        params.add("copy");
+        params.add(remoteFilePath);
+        params.add(localFilePath);
+        params.add("--transfers");
+        params.add(String.valueOf(transfers));
+        params.add("--checkers");
+        params.add(String.valueOf(checkers));
+        if (bwlimit > 0) {
+            params.add("--bwlimit");
+            params.add(bwlimit + "M");
+        }
+        boolean showProgress = sharedPreferences.getBoolean(context.getString(R.string.pref_key_rclone_progress), false);
+        if (showProgress) {
+            params.add("-P");
+        }
+        params.addAll(Arrays.asList("--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log"));
+        command = createCommandWithOptions(params);
 
         String[] env = getRcloneEnv();
         try {
@@ -765,7 +803,28 @@ public class Rclone {
             path = (uploadPath.compareTo("//" + remoteName) == 0) ? remoteName + ":" + localRemotePath : remoteName + ":" + localRemotePath + uploadPath;
         }
 
-        command = createCommandWithOptions("copy", uploadFile, path, "--transfers", "1", "--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int transfers = sharedPreferences.getInt(context.getString(R.string.pref_key_rclone_transfers), 1);
+        int bwlimit = sharedPreferences.getInt(context.getString(R.string.pref_key_rclone_bwlimit), 0);
+        int checkers = sharedPreferences.getInt(context.getString(R.string.pref_key_rclone_checkers), 8);
+        ArrayList<String> params = new ArrayList<>();
+        params.add("copy");
+        params.add(uploadFile);
+        params.add(path);
+        params.add("--transfers");
+        params.add(String.valueOf(transfers));
+        params.add("--checkers");
+        params.add(String.valueOf(checkers));
+        if (bwlimit > 0) {
+            params.add("--bwlimit");
+            params.add(bwlimit + "M");
+        }
+        boolean showProgress = sharedPreferences.getBoolean(context.getString(R.string.pref_key_rclone_progress), false);
+        if (showProgress) {
+            params.add("-P");
+        }
+        params.addAll(Arrays.asList("--stats=1s", "--stats-log-level", "NOTICE", "--use-json-log"));
+        command = createCommandWithOptions(params);
 
         String[] env = getRcloneEnv();
         try {
