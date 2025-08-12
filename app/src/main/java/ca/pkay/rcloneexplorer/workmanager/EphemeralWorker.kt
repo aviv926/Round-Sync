@@ -5,9 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import ca.pkay.rcloneexplorer.Activities.RcloneProgressActivity
     // Add missing Type enum if not present
-    internal enum class Type {
-        DOWNLOAD, UPLOAD, MOVE, DELETE
-    }
 
 import android.app.Notification
 import android.content.BroadcastReceiver
