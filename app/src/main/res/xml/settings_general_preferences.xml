@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <!-- Rclone progress output option -->
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="pref_key_rclone_progress"
         android:title="@string/pref_rclone_progress_title"
@@ -21,26 +21,26 @@
     <PreferenceCategory app:title="@string/preference_category_header_thumbnails">
         <SwitchPreferenceCompat
             app:defaultValue="true"
-            app:key="@string/pref_key_show_thumbnails"
+        app:key="pref_key_show_thumbnails"
             app:title="@string/show_thumbnails" />
 
         <de.felixnuesse.extract.settings.preferences.FilesizePreference
             android:defaultValue="1048576"
-            android:key="@string/pref_key_thumbnail_size_limit"
+        android:key="pref_key_thumbnail_size_limit"
             android:title="@string/pref_thumbnails_dlg_title"
-            app:dependency="@string/pref_key_show_thumbnails" />
+        app:dependency="pref_key_show_thumbnails" />
 
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/preference_category_header_background_work">
         <SwitchPreference
             android:defaultValue="true"
-            android:key="@string/shared_preferences_allow_sync_trigger_while_idle"
+        android:key="shared_preferences_allow_sync_trigger_while_idle"
             android:title="@string/alarm_while_idle"
             app:summary="@string/alarm_while_idle_summary" />
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/pref_key_wifi_only_transfers"
+        android:key="pref_key_wifi_only_transfers"
             android:title="@string/transfer_only_on_wifi"
             app:summary="@string/transfer_only_on_wifi_summary" />
     </PreferenceCategory>
@@ -48,7 +48,7 @@
     <PreferenceCategory android:title="@string/preference_category_header_proxy">
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/pref_key_use_proxy"
+        android:key="pref_key_use_proxy"
             android:title="@string/pref_use_proxy_title"
             app:summary="@string/pref_use_proxy_summary" />
 
@@ -56,40 +56,40 @@
             android:defaultValue="1"
             android:entries="@array/proxy_protocols"
             android:entryValues="@array/proxy_protocols"
-            android:key="@string/pref_key_proxy_protocol"
+        android:key="pref_key_proxy_protocol"
             android:summary="Protocol: %s"
             android:title="@string/pref_proxy_protocol_dlg_title"
-            app:dependency="@string/pref_key_use_proxy" />
+        app:dependency="pref_key_use_proxy" />
 
         <EditTextPreference
             android:defaultValue="example.com"
-            android:key="@string/pref_key_proxy_host"
+        android:key="pref_key_proxy_host"
             android:title="@string/pref_proxy_host_dlg_title"
-            app:dependency="@string/pref_key_use_proxy"
+        app:dependency="pref_key_use_proxy"
             app:useSimpleSummaryProvider="true" />
 
 
         <de.felixnuesse.extract.settings.preferences.EditIntPreference
             android:inputType="number"
-            android:key="@string/pref_key_proxy_port"
+        android:key="pref_key_proxy_port"
             android:numeric="integer"
             android:title="@string/pref_proxy_port_dlg_title"
             app:defaultValue="8080"
-            app:dependency="@string/pref_key_use_proxy"
+        app:dependency="pref_key_use_proxy"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             android:defaultValue=""
-            android:key="@string/pref_key_proxy_username"
+        android:key="pref_key_proxy_username"
             android:title="@string/pref_proxy_user"
-            app:dependency="@string/pref_key_use_proxy"
+        app:dependency="pref_key_use_proxy"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             android:defaultValue=""
-            android:key="@string/pref_key_proxy_password"
+        android:key="pref_key_proxy_password"
             android:title="@string/pref_proxy_password"
-            app:dependency="@string/pref_key_use_proxy"
+        app:dependency="pref_key_use_proxy"
             android:inputType="textPassword"
             android:password="true"
             app:useSimpleSummaryProvider="true" />
@@ -98,7 +98,7 @@
         <PreferenceCategory android:title="@string/pref_category_rclone_advanced">
             <de.felixnuesse.extract.settings.preferences.EditIntPreference
                 android:inputType="number"
-                android:key="@string/pref_key_rclone_transfers"
+                android:key="pref_key_rclone_transfers"
                 android:numeric="integer"
                 android:title="@string/pref_rclone_transfers_title"
                 app:defaultValue="1"
@@ -106,7 +106,7 @@
 
             <de.felixnuesse.extract.settings.preferences.EditIntPreference
                 android:inputType="number"
-                android:key="@string/pref_key_rclone_bwlimit"
+                android:key="pref_key_rclone_bwlimit"
                 android:numeric="integer"
                 android:title="@string/pref_rclone_bwlimit_title"
                 app:defaultValue="0"
@@ -114,7 +114,7 @@
 
             <de.felixnuesse.extract.settings.preferences.EditIntPreference
                 android:inputType="number"
-                android:key="@string/pref_key_rclone_checkers"
+                android:key="pref_key_rclone_checkers"
                 android:numeric="integer"
                 android:title="@string/pref_rclone_checkers_title"
                 app:defaultValue="8"
