@@ -19,9 +19,12 @@ class StatusObject(var mContext: Context){
 
     var estimatedAverageSpeed = 0L
     var lastItemAverageSpeed = 0L
+    private var lastStatsUpdateTime = System.currentTimeMillis()
 
     fun getSpeed(): String {
-        return Formatter.formatFileSize(mContext, mStats.optLong("speed", 0)) + "/s"
+    val now = System.currentTimeMillis()
+    val speedValue = if (now - lastStatsUpdateTime > 5000) 0 else mStats.optLong("speed", 0)
+    return Formatter.formatFileSize(mContext, speedValue) + "/s"
     }
 
     /**
@@ -88,6 +91,7 @@ class StatusObject(var mContext: Context){
         }
 
         if(logLine.has("stats")) {
+            lastStatsUpdateTime = System.currentTimeMillis()
             clearObject()
             mLogline = logLine
             mStats = mLogline.getJSONObject("stats")

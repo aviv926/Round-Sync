@@ -59,6 +59,32 @@
             android:key="@string/pref_key_proxy_host"
             android:title="@string/pref_proxy_host_dlg_title"
             app:dependency="@string/pref_key_use_proxy"
+
+        <PreferenceCategory android:title="@string/preference_category_header_rclone_options">
+            <de.felixnuesse.extract.settings.preferences.EditIntPreference
+                android:inputType="number"
+                android:key="@string/pref_key_rclone_transfers"
+                android:numeric="integer"
+                android:title="@string/pref_rclone_transfers_title"
+                app:defaultValue="1"
+                app:useSimpleSummaryProvider="true" />
+
+            <de.felixnuesse.extract.settings.preferences.EditIntPreference
+                android:inputType="number"
+                android:key="@string/pref_key_rclone_bwlimit"
+                android:numeric="integer"
+                android:title="@string/pref_rclone_bwlimit_title"
+                app:defaultValue="0"
+                app:useSimpleSummaryProvider="true" />
+
+            <de.felixnuesse.extract.settings.preferences.EditIntPreference
+                android:inputType="number"
+                android:key="@string/pref_key_rclone_checkers"
+                android:numeric="integer"
+                android:title="@string/pref_rclone_checkers_title"
+                app:defaultValue="8"
+                app:useSimpleSummaryProvider="true" />
+        </PreferenceCategory>
             app:useSimpleSummaryProvider="true" />
 
 

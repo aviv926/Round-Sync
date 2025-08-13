@@ -399,6 +399,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_permissions:
                 startPermissionFragment();
                 break;
+            case R.id.nav_rclone_progress:
+                Intent intent = new Intent(this, RcloneProgressActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 

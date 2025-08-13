@@ -93,9 +93,15 @@ class SyncWorker (private var mContext: Context, workerParams: WorkerParameters)
         prepareNotifications()
         registerBroadcastReceivers()
 
+
+        val transfers = mPreferences.getInt(mContext.getString(R.string.pref_key_rclone_transfers), 1)
+        val bwlimit = mPreferences.getInt(mContext.getString(R.string.pref_key_rclone_bwlimit), 0)
+        val checkers = mPreferences.getInt(mContext.getString(R.string.pref_key_rclone_checkers), 8)
+        val optionsMsg = "Transfers: $transfers, BWLimit: ${if (bwlimit > 0) "$bwlimit MB/s" else "Unlimited"}, Checkers: $checkers"
+
         updateForegroundNotification(mNotificationManager.updateSyncNotification(
             mTitle,
-            mTitle,
+            "$mTitle\n$optionsMsg",
             ArrayList(),
             0,
             ongoingNotificationID

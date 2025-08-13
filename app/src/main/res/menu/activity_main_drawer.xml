@@ -23,6 +23,10 @@
             android:id="@+id/nav_logs"
             android:icon="@drawable/ic_round_list_24"
             android:title="@string/logFragment" />
+            <item
+                android:id="@+id/nav_rclone_progress"
+                android:icon="@drawable/ic_bug_report"
+                android:title="@string/menu_rclone_progress" />
         <item
             android:id="@+id/nav_permissions"
             android:icon="@drawable/ic_twotone_error_24"

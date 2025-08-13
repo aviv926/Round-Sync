@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="Rclone Progress" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:id="@+id/rclone_command_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Rclone command will appear here"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:paddingBottom="8dp"
+            android:textColor="@android:color/holo_blue_dark" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/rclone_output_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#F5F5F5">
+            <TextView
+                android:id="@+id/rclone_output_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rclone output will appear here"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:padding="8dp"
+                android:typeface="monospace"
+                android:textColor="@android:color/black" />
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
