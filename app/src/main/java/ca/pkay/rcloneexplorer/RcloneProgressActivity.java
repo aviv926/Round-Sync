@@ -5,6 +5,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
+import android.content.SharedPreferences;
+import androidx.preference.PreferenceManager;
 
 public class RcloneProgressActivity extends AppCompatActivity {
     private TextView commandView;
