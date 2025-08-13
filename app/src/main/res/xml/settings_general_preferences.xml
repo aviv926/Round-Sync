@@ -58,7 +58,7 @@
             android:defaultValue="example.com"
             android:key="@string/pref_key_proxy_host"
             android:title="@string/pref_proxy_host_dlg_title"
-            app:dependency="@string/pref_key_use_proxy"
+            app:dependency="@string/pref_key_use_proxy" />
 
         <PreferenceCategory android:title="@string/preference_category_header_rclone_options">
             <de.felixnuesse.extract.settings.preferences.EditIntPreference
